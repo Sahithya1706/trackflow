@@ -8,7 +8,8 @@ const {
   deleteUser,
   getAllProjects,
   getAllTickets,
-  getAdvancedAnalytics
+  getAdvancedAnalytics,
+  getTelemetry
 } = require('../controllers/adminController');
 const { protect, adminMiddleware } = require('../middleware/authMiddleware');
 
@@ -20,6 +21,7 @@ router.use(adminMiddleware);
 
 router.get('/stats', getAdminStats);
 router.get('/analytics', getAdvancedAnalytics);
+router.get('/telemetry', getTelemetry);
 router.get('/users', getAllUsers);
 router.put('/user/:id', updateUserStatus);
 router.post('/users/bulk-update', bulkUpdateUsers);

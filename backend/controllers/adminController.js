@@ -44,6 +44,26 @@ const getAdminStats = async (req, res) => {
   }
 };
 
+// @desc    Get system telemetry (counts)
+// @route   GET /api/admin/telemetry
+// @access  Private (Admin)
+const getTelemetry = async (req, res) => {
+  try {
+    const users = await User.countDocuments();
+    const projects = await Project.countDocuments();
+    const tickets = await Ticket.countDocuments();
+
+    res.json({
+      users,
+      projects,
+      tickets
+    });
+  } catch (error) {
+    console.error("Telemetry Error:", error);
+    res.status(500).json({ message: "Telemetry fetch failed" });
+  }
+};
+
 // @desc    Get all users for admin
 const getAllUsers = async (req, res) => {
   try {
@@ -258,5 +278,6 @@ module.exports = {
   deleteUser,
   getAllProjects,
   getAllTickets,
-  getAdvancedAnalytics
+  getAdvancedAnalytics,
+  getTelemetry
 };

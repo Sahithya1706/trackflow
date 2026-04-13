@@ -19,7 +19,9 @@ const AdminProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/admin/projects`);
+      const res = await axios.get(`${API_BASE_URL}/api/admin/projects`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       setProjects(res.data);
     } catch (err) {
       console.error(err);
