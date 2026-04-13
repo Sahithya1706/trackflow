@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import API from '@/config/api';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   Layers, 
   Trash2, 
@@ -18,7 +19,9 @@ const AdminProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await API.get('/api/admin/projects');
+      const res = await axios.get(`${API_BASE_URL}/api/admin/projects`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       setProjects(res.data);
     } catch (err) {
       console.error(err);

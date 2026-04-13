@@ -45,7 +45,9 @@ const AdminUsers = () => {
   const handleToggleBlock = async (id, currentStatus) => {
     setActionLoading(id);
     try {
-      await API.put(`/api/admin/user/${id}`, { isBlocked: !currentStatus });
+      await axios.put(`${API_BASE_URL}/api/admin/user/${id}`, { isBlocked: !currentStatus }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       fetchUsers();
     } catch (err) {
       alert('Failed to update user status');
@@ -58,7 +60,9 @@ const AdminUsers = () => {
     setActionLoading(id);
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
     try {
-      await API.put(`/api/admin/user/${id}`, { role: newRole });
+      await axios.put(`${API_BASE_URL}/api/admin/user/${id}`, { role: newRole }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       fetchUsers();
     } catch (err) {
       alert('Failed to update user role');
@@ -71,7 +75,9 @@ const AdminUsers = () => {
     if (!window.confirm('Are you sure you want to permanently delete this user?')) return;
     setActionLoading(id);
     try {
-      await API.delete(`/api/admin/user/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/admin/user/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       fetchUsers();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete user');
@@ -84,11 +90,15 @@ const AdminUsers = () => {
     if (action === 'delete') {
       if (!window.confirm(`Are you sure you want to delete ${selectedUsers.length} users?`)) return;
       try {
-        await API.post('/api/admin/users/bulk-delete', { ids: selectedUsers });
+        await axios.post(`${API_BASE_URL}/api/admin/users/bulk-delete`, { ids: selectedUsers }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
       } catch (err) { alert('Bulk delete failed'); }
     } else {
       try {
-        await API.post('/api/admin/users/bulk-update', { ids: selectedUsers, isBlocked: value });
+        await axios.post(`${API_BASE_URL}/api/admin/users/bulk-update`, { ids: selectedUsers, isBlocked: value }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
       } catch (err) { alert('Bulk update failed'); }
     }
     fetchUsers();
