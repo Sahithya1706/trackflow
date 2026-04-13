@@ -28,9 +28,7 @@ const AdminTickets = () => {
 
   const fetchTickets = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/admin/tickets`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await API.get('/api/admin/tickets');
       setTickets(res.data);
     } catch (err) {
       console.error(err);

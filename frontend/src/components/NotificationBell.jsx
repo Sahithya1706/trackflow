@@ -109,9 +109,7 @@ const NotificationBell = () => {
   const handleMarkAsRead = async (notification) => {
     if (notification.status === 'read') return;
     try {
-      await axios.put(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.put(`/api/notifications/${notification._id}/read`);
       setNotifications(prev =>
         prev.map(n => n._id === notification._id ? { ...n, status: 'read' } : n)
       );
@@ -123,9 +121,7 @@ const NotificationBell = () => {
   const handleMarkAllAsRead = async () => {
     setMarkingAll(true);
     try {
-      await axios.put(`${API_BASE_URL}/api/notifications/read-all`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.put('/api/notifications/read-all');
       setNotifications(prev => prev.map(n => ({ ...n, status: 'read' })));
     } catch (error) {
       console.error('Mark all read error', error);
@@ -136,9 +132,7 @@ const NotificationBell = () => {
 
   const handleAccept = async (notification) => {
     try {
-      await axios.post(`${API_BASE_URL}/api/projects/${notification.project?._id}/accept`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.post(`/api/projects/${notification.project?._id}/accept`);
       await handleMarkAsRead(notification);
       fetchNotifications();
     } catch (error) {
@@ -148,9 +142,7 @@ const NotificationBell = () => {
 
   const handleReject = async (notification) => {
     try {
-      await axios.post(`${API_BASE_URL}/api/projects/${notification.project?._id}/reject`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.post(`/api/projects/${notification.project?._id}/reject`);
       await handleMarkAsRead(notification);
       fetchNotifications();
     } catch (error) {
