@@ -57,8 +57,19 @@ app.use(helmet({
 }));
 
 // Enable CORS
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  process.env.FRONTEND_URL, // set this on Render: your deployed frontend URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Matches Vite dev server port
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS blocked: ${origin}`));
+  },
   credentials: true
 }));
 
@@ -77,7 +88,22 @@ app.use(limiter);
 
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
-// Routes
+// ─── Public Health Routes (NO auth, placed BEFORE all API routes) ────────────
+app.get('/', (req, res) => {
+  res.status(200).send('TrackFlow Backend is Live 🚀');
+});
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'API working',
+    uptime: `${process.uptime().toFixed(2)}s`,
+    timestamp: new Date().toISOString()
+  });
+});
+// ─────────────────────────────────────────────────────────────────────────────
+
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tickets', ticketRoutes);
@@ -109,26 +135,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// Public health-check routes (no auth required)
-app.get('/', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'TrackFlow Backend is running 🚀',
-    version: '1.0.0',
-    timestamp: new Date().toISOString()
-  });
-});
-
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    uptime: `${process.uptime().toFixed(2)}s`,
-    memory: process.memoryUsage().heapUsed,
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Error handling
+// Error handling (must be LAST — after all routes)
 app.use(notFound);
 app.use(errorHandler);
 
