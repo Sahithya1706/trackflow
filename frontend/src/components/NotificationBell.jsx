@@ -20,6 +20,7 @@ import {
 const socket = io(API_BASE_URL, {
   transports: ['websocket'],
   autoConnect: false,
+  withCredentials: true
 });
 
 // Returns icon + color per notification type

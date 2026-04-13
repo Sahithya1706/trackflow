@@ -25,7 +25,8 @@ import { io } from 'socket.io-client';
 
 const socket = io(API_BASE_URL, {
   transports: ['websocket'],
-  autoConnect: false
+  autoConnect: false,
+  withCredentials: true
 });
 
 const ProjectDetails = () => {

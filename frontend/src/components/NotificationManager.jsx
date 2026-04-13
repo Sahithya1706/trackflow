@@ -6,7 +6,8 @@ import { Bell, MessageSquare, Ticket, RefreshCw } from 'lucide-react';
 
 const socket = io(API_BASE_URL, {
   transports: ['websocket'],
-  autoConnect: true
+  autoConnect: true,
+  withCredentials: true
 });
 
 const NotificationManager = () => {
