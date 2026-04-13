@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   Users, 
   Layers, 
@@ -54,7 +55,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const res = await axios.get('/api/admin/analytics');
+        const res = await axios.get(`${API_BASE_URL}/api/admin/analytics`);
         setData(res.data);
       } catch (err) {
         setError('Failed to fetch platform telemetry');

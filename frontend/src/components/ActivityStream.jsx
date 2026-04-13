@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   History, 
   User, 
@@ -17,7 +18,7 @@ const ActivityStream = ({ projectId }) => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const res = await axios.get(`/api/activity/${projectId}`);
+        const res = await axios.get(`${API_BASE_URL}/api/activity/${projectId}`);
         setActivities(res.data);
       } catch (error) {
         console.error("Failed to fetch activity logs", error);

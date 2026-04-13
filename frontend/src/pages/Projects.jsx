@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
@@ -29,7 +30,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get('/api/projects', {
+      const res = await axios.get(`${API_BASE_URL}/api/projects`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setProjects(res.data);
@@ -73,13 +74,13 @@ const Projects = () => {
     e.preventDefault();
     try {
       if (editMode) {
-        await axios.put(`/api/projects/${newProject._id}`, {
+        await axios.put(`${API_BASE_URL}/api/projects/${newProject._id}`, {
           name: newProject.name,
           description: newProject.description
         });
         toast.success('Project updated');
       } else {
-        await axios.post('/api/projects', newProject);
+        await axios.post(`${API_BASE_URL}/api/projects`, newProject);
         toast.success('Project created');
       }
       setShowModal(false);
@@ -102,7 +103,7 @@ const Projects = () => {
     setOpenMenu(null);
     if (!window.confirm("Are you sure you want to delete this project?")) return;
     try {
-      await axios.delete(`/api/projects/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/projects/${id}`);
       toast.success('Project deleted');
       fetchProjects();
     } catch (error) {

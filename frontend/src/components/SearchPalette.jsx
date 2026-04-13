@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
@@ -60,7 +61,7 @@ const SearchPalette = () => {
 
       setLoading(true);
       try {
-        const res = await axios.get(`/api/search?q=${query}`);
+        const res = await axios.get(`${API_BASE_URL}/api/search?q=${query}`);
         setResults(res.data);
         setActiveIndex(-1); // Reset index on new results
       } catch (error) {

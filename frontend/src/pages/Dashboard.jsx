@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { formatDistanceToNow } from 'date-fns';
 import { 
   BarChart3, 
@@ -77,9 +78,9 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [projRes, ticketRes, activityRes] = await Promise.all([
-          axios.get('/api/projects'),
-          axios.get('/api/tickets/my').catch(() => ({ data: [] })),
-          axios.get('/api/activity').catch(() => ({ data: [] }))
+          axios.get(`${API_BASE_URL}/api/projects`),
+          axios.get(`${API_BASE_URL}/api/tickets/my`).catch(() => ({ data: [] })),
+          axios.get(`${API_BASE_URL}/api/activity`).catch(() => ({ data: [] }))
         ]);
 
         setRecentProjects(projRes.data.slice(0, 3));

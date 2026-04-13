@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '@/config/api';
 import { useAuth } from '../context/AuthContext';
 import { 
   Bell, 
@@ -16,7 +17,7 @@ import {
 } from 'lucide-react';
 
 // Singleton socket — reuse the same connection as the rest of the app
-const socket = io('http://localhost:5000', {
+const socket = io(API_BASE_URL, {
   transports: ['websocket'],
   autoConnect: false,
 });
@@ -58,7 +59,7 @@ const NotificationBell = () => {
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await axios.get('/api/notifications', {
+      const res = await axios.get(`${API_BASE_URL}/api/notifications`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setNotifications(res.data);
@@ -107,7 +108,7 @@ const NotificationBell = () => {
   const handleMarkAsRead = async (notification) => {
     if (notification.status === 'read') return;
     try {
-      await axios.put(`/api/notifications/${notification._id}/read`, {}, {
+      await axios.put(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setNotifications(prev =>
@@ -121,7 +122,7 @@ const NotificationBell = () => {
   const handleMarkAllAsRead = async () => {
     setMarkingAll(true);
     try {
-      await axios.put('/api/notifications/read-all', {}, {
+      await axios.put(`${API_BASE_URL}/api/notifications/read-all`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setNotifications(prev => prev.map(n => ({ ...n, status: 'read' })));
@@ -134,7 +135,7 @@ const NotificationBell = () => {
 
   const handleAccept = async (notification) => {
     try {
-      await axios.post(`/api/projects/${notification.project?._id}/accept`, {}, {
+      await axios.post(`${API_BASE_URL}/api/projects/${notification.project?._id}/accept`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       await handleMarkAsRead(notification);
@@ -146,7 +147,7 @@ const NotificationBell = () => {
 
   const handleReject = async (notification) => {
     try {
-      await axios.post(`/api/projects/${notification.project?._id}/reject`, {}, {
+      await axios.post(`${API_BASE_URL}/api/projects/${notification.project?._id}/reject`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       await handleMarkAsRead(notification);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   ChevronLeft, 
   Loader2, 
@@ -19,7 +20,7 @@ import {
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5000', {
+const socket = io(API_BASE_URL, {
   transports: ['websocket'],
   autoConnect: false
 });
@@ -51,7 +52,7 @@ const TicketDetails = () => {
     const fetchTicket = async () => {
       try {
         // Assume backend populate project or we just use ticket logic
-        const res = await axios.get(`/api/tickets/${ticketId}`);
+        const res = await axios.get(`${API_BASE_URL}/api/tickets/${ticketId}`);
         setSelectedTicket(res.data);
       } catch (error) {
         console.error("Ticket fetch error", error);
@@ -81,7 +82,7 @@ const TicketDetails = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`/api/comments/${ticketId}`);
+      const res = await axios.get(`${API_BASE_URL}/api/comments/${ticketId}`);
       setComments(res.data);
     } catch (error) {
       console.error("Comment fetch error", error);
@@ -101,7 +102,7 @@ const TicketDetails = () => {
 
     setCommentLoading(true);
     try {
-      const res = await axios.post('/api/comments', {
+      const res = await axios.post(`${API_BASE_URL}/api/comments`, {
         text: newComment,
         ticketId: selectedTicket._id
       });
@@ -123,14 +124,14 @@ const TicketDetails = () => {
 
     setUploading(true);
     try {
-      const res = await axios.post('/api/upload', formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       const newAttachment = res.data.url;
       const updatedAttachments = [...(selectedTicket.attachments || []), newAttachment];
 
-      await axios.put(`/api/tickets/${selectedTicket._id}`, {
+      await axios.put(`${API_BASE_URL}/api/tickets/${selectedTicket._id}`, {
         attachments: updatedAttachments
       });
 
@@ -349,7 +350,7 @@ const TicketDetails = () => {
               {selectedTicket.attachments && selectedTicket.attachments.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3 mt-3">
                   {selectedTicket.attachments.map((url, i) => {
-                    const fullUrl = url.startsWith('/uploads') ? `http://localhost:5000${url}` : url;
+                    const fullUrl = url.startsWith('/uploads') ? `${API_BASE_URL}${url}` : url;
                     return (
                       <a key={i} href={fullUrl} target="_blank" rel="noreferrer" className="block aspect-video rounded-lg overflow-hidden border border-slate-700 hover:border-primary transition-all group relative cursor-pointer">
                         <img src={fullUrl} alt="Attachment" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />

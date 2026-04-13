@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, 
@@ -88,7 +89,7 @@ const Settings = () => {
     setError('');
 
     try {
-      await axios.put('/api/users/profile', formData);
+      await axios.put(`${API_BASE_URL}/api/users/profile`, formData);
       setSuccess('Profile updated successfully');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update profile');

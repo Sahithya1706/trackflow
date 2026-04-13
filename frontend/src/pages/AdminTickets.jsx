@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   Ticket, 
   Search, 
@@ -27,7 +28,7 @@ const AdminTickets = () => {
 
   const fetchTickets = async () => {
     try {
-      const res = await axios.get('/api/admin/tickets');
+      const res = await axios.get(`${API_BASE_URL}/api/admin/tickets`);
       setTickets(res.data);
     } catch (err) {
       console.error(err);

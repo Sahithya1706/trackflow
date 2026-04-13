@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   Layers, 
   Trash2, 
@@ -18,7 +19,7 @@ const AdminProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get('/api/admin/projects');
+      const res = await axios.get(`${API_BASE_URL}/api/admin/projects`);
       setProjects(res.data);
     } catch (err) {
       console.error(err);

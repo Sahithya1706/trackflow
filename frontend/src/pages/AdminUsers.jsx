@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config/api';
 import { 
   Users, 
   Trash2, 
@@ -24,7 +25,7 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/api/admin/users');
+      const res = await axios.get(`${API_BASE_URL}/api/admin/users`);
       setUsers(res.data);
     } catch (err) {
       console.error(err);
@@ -41,7 +42,7 @@ const AdminUsers = () => {
   const handleToggleBlock = async (id, currentStatus) => {
     setActionLoading(id);
     try {
-      await axios.put(`/api/admin/user/${id}`, { isBlocked: !currentStatus });
+      await axios.put(`${API_BASE_URL}/api/admin/user/${id}`, { isBlocked: !currentStatus });
       fetchUsers();
     } catch (err) {
       alert('Failed to update user status');
@@ -54,7 +55,7 @@ const AdminUsers = () => {
     setActionLoading(id);
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
     try {
-      await axios.put(`/api/admin/user/${id}`, { role: newRole });
+      await axios.put(`${API_BASE_URL}/api/admin/user/${id}`, { role: newRole });
       fetchUsers();
     } catch (err) {
       alert('Failed to update user role');
@@ -67,7 +68,7 @@ const AdminUsers = () => {
     if (!window.confirm('Are you sure you want to permanently delete this user?')) return;
     setActionLoading(id);
     try {
-      await axios.delete(`/api/admin/user/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/admin/user/${id}`);
       fetchUsers();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete user');
@@ -80,11 +81,11 @@ const AdminUsers = () => {
     if (action === 'delete') {
       if (!window.confirm(`Are you sure you want to delete ${selectedUsers.length} users?`)) return;
       try {
-        await axios.post('/api/admin/users/bulk-delete', { ids: selectedUsers });
+        await axios.post(`${API_BASE_URL}/api/admin/users/bulk-delete`, { ids: selectedUsers });
       } catch (err) { alert('Bulk delete failed'); }
     } else {
       try {
-        await axios.post('/api/admin/users/bulk-update', { ids: selectedUsers, isBlocked: value });
+        await axios.post(`${API_BASE_URL}/api/admin/users/bulk-update`, { ids: selectedUsers, isBlocked: value });
       } catch (err) { alert('Bulk update failed'); }
     }
     fetchUsers();

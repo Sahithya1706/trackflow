@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '@/config/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { Bell, MessageSquare, Ticket, RefreshCw } from 'lucide-react';
 
-const socket = io('http://localhost:5000', {
+const socket = io(API_BASE_URL, {
   transports: ['websocket'],
   autoConnect: true
 });
