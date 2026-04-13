@@ -1,0 +1,93 @@
+# ──────────────────────────────────────────
+# TrackFlow — MERN Stack .gitignore
+# ──────────────────────────────────────────
+
+# ── Dependencies ──────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ── Environment Variables ─────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ── Build Output ──────────────────────────
+dist/
+build/
+out/
+.next/
+
+# ── Logs ──────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Runtime / Process ─────────────────────
+.npm
+.yarn-integrity
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ── File Uploads (Multer storage) ─────────
+backend/uploads/
+uploads/
+
+# ── OS Generated Files ────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Editor & IDE ──────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Temporary & Swap Files ────────────────
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ── Testing ───────────────────────────────
+coverage/
+.nyc_output/
+
+# ── Miscellaneous ─────────────────────────
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+backend/uploads
+backend/.env
+backend/node_modules
+frontend/node_modules
+frontend/.env
+frontend/dist
+frontend/build
+frontend/out
+frontend/.next
+frontend/public
+frontend/node_modules
