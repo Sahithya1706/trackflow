@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from '@/config/api';
+import API from '@/config/api';
 
 const AuthContext = createContext();
 
@@ -8,14 +7,18 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = `${API_BASE_URL}/api/auth`;
-
   useEffect(() => {
     const checkUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
       try {
-        const res = await axios.get(`${API_URL}/me`);
+        const res = await API.get('/api/auth/me');
         setUser(res.data);
       } catch (error) {
+        localStorage.removeItem("token");
         setUser(null);
       } finally {
         setLoading(false);
@@ -26,23 +29,31 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await axios.post(`${API_URL}/login`, { email, password });
+    const res = await API.post('/api/auth/login', { email, password });
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
+    }
     setUser(res.data);
     return res.data;
   };
 
   const register = async (userData) => {
-    const res = await axios.post(`${API_URL}/register`, userData);
+    const res = await API.post('/api/auth/register', userData);
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
+    }
     setUser(res.data);
     return res.data;
   };
 
   const logout = async () => {
     try {
-      await axios.get(`${API_URL}/logout`);
-      setUser(null);
+      await API.get('/api/auth/logout');
     } catch (error) {
       console.error("Logout failed", error);
+    } finally {
+      localStorage.removeItem("token");
+      setUser(null);
     }
   };
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '@/config/api';
+import API, { API_BASE_URL } from '@/config/api';
 import { 
   ChevronLeft, 
   Settings, 
@@ -56,8 +55,8 @@ const ProjectDetails = () => {
   const fetchData = async () => {
     try {
       const [projRes, ticketRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/projects/${id}`),
-        axios.get(`${API_BASE_URL}/api/projects/${id}/tickets`)
+        API.get(`/api/projects/${id}`),
+        API.get(`/api/projects/${id}/tickets`)
       ]);
       setProject(projRes.data);
       setTickets(ticketRes.data);
@@ -108,7 +107,7 @@ const ProjectDetails = () => {
     setTickets(updatedTickets);
 
     try {
-      await axios.put(`${API_BASE_URL}/api/tickets/${draggableId}`, {
+      await API.put(`/api/tickets/${draggableId}`, {
         status: destination.droppableId
       });
     } catch (error) {
@@ -121,14 +120,10 @@ const ProjectDetails = () => {
     e.preventDefault();
     try {
       if (editMode) {
-        await axios.put(`${API_BASE_URL}/api/tickets/${editTicketId}`, newTicket, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        });
+        await API.put(`/api/tickets/${editTicketId}`, newTicket);
         setTickets(prev => prev.map(t => t._id === editTicketId ? { ...t, ...newTicket } : t));
       } else {
-        await axios.post(`${API_BASE_URL}/api/projects/${id}/tickets`, newTicket, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        });
+        await API.post(`/api/projects/${id}/tickets`, newTicket);
       }
       setShowModal(false);
       setNewTicket({ title: '', description: '', priority: 'Medium', status: 'To Do' });
@@ -154,9 +149,7 @@ const ProjectDetails = () => {
   const handleDeleteTicket = async (ticketId) => {
     if (!window.confirm("Are you sure you want to delete this ticket?")) return;
     try {
-      await axios.delete(`${API_BASE_URL}/api/tickets/${ticketId}`, {
-         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.delete(`/api/tickets/${ticketId}`);
       setTickets(prev => prev.filter(t => t._id !== ticketId));
     } catch (err) {
       console.error(err);
@@ -167,9 +160,7 @@ const ProjectDetails = () => {
   const handleInviteUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE_URL}/api/projects/${id}/invite`, { email: inviteEmail }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      await API.post(`/api/projects/${id}/invite`, { email: inviteEmail });
       alert('Invite sent successfully!');
       setShowInviteModal(false);
       setInviteEmail('');
@@ -186,10 +177,10 @@ const ProjectDetails = () => {
   const handleBulkTicketAction = async (action, value) => {
     try {
       if (action === 'move') {
-        await axios.post(`${API_BASE_URL}/api/tickets/bulk-update`, { ids: selectedTickets, status: value });
+        await API.post(`/api/tickets/bulk-update`, { ids: selectedTickets, status: value });
       } else if (action === 'delete') {
         if (!window.confirm(`Delete ${selectedTickets.length} tickets permanently?`)) return;
-        await axios.post(`${API_BASE_URL}/api/tickets/bulk-delete`, { ids: selectedTickets });
+        await API.post(`/api/tickets/bulk-delete`, { ids: selectedTickets });
       }
       fetchData();
       setSelectedTickets([]);

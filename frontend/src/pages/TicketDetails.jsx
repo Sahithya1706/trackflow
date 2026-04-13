@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '@/config/api';
+import API, { API_BASE_URL } from '@/config/api';
 import { 
   ChevronLeft, 
   Loader2, 
@@ -52,8 +51,7 @@ const TicketDetails = () => {
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        // Assume backend populate project or we just use ticket logic
-        const res = await axios.get(`${API_BASE_URL}/api/tickets/${ticketId}`);
+        const res = await API.get(`/api/tickets/${ticketId}`);
         setSelectedTicket(res.data);
       } catch (error) {
         console.error("Ticket fetch error", error);
@@ -83,7 +81,7 @@ const TicketDetails = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/comments/${ticketId}`);
+      const res = await API.get(`/api/comments/${ticketId}`);
       setComments(res.data);
     } catch (error) {
       console.error("Comment fetch error", error);
@@ -103,7 +101,7 @@ const TicketDetails = () => {
 
     setCommentLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/comments`, {
+      const res = await API.post(`/api/comments`, {
         text: newComment,
         ticketId: selectedTicket._id
       });
@@ -125,14 +123,14 @@ const TicketDetails = () => {
 
     setUploading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
+      const res = await API.post(`/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       const newAttachment = res.data.url;
       const updatedAttachments = [...(selectedTicket.attachments || []), newAttachment];
 
-      await axios.put(`${API_BASE_URL}/api/tickets/${selectedTicket._id}`, {
+      await API.put(`/api/tickets/${selectedTicket._id}`, {
         attachments: updatedAttachments
       });
 

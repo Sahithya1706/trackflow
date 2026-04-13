@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from '@/config/api';
+import API from '@/config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
@@ -30,9 +29,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/projects`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await API.get('/api/projects');
       setProjects(res.data);
     } catch (error) {
       console.error(error);
@@ -44,44 +41,23 @@ const Projects = () => {
   useEffect(() => {
     fetchProjects();
     
-    // Listeners for ESC and outside click
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') setShowModal(false);
-    };
+    // Listeners for click outside
     const handleClickOutside = () => setOpenMenu(null);
-    
-    window.addEventListener('keydown', handleEsc);
     window.addEventListener('click', handleClickOutside);
     return () => {
-      window.removeEventListener('keydown', handleEsc);
       window.removeEventListener('click', handleClickOutside);
     };
   }, []);
-
-  // Prevent background scroll when modal is open
-  useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [showModal]);
 
   const handleSubmitProject = async (e) => {
     e.preventDefault();
     try {
       if (editMode) {
-        await axios.put(`${API_BASE_URL}/api/projects/${newProject._id}`, {
+        await API.put(`/api/projects/${newProject._id}`, {
           name: newProject.name,
           description: newProject.description
         });
         toast.success('Project updated');
-      } else {
-        await axios.post(`${API_BASE_URL}/api/projects`, newProject);
-        toast.success('Project created');
       }
       setShowModal(false);
       setNewProject({ name: '', description: '' });
@@ -103,7 +79,7 @@ const Projects = () => {
     setOpenMenu(null);
     if (!window.confirm("Are you sure you want to delete this project?")) return;
     try {
-      await axios.delete(`${API_BASE_URL}/api/projects/${id}`);
+      await API.delete(`/api/projects/${id}`);
       toast.success('Project deleted');
       fetchProjects();
     } catch (error) {
@@ -123,11 +99,7 @@ const Projects = () => {
           <p className="text-slate-500 mt-2 font-medium">Manage and monitor all active development sprints.</p>
         </div>
         <button 
-          onClick={() => {
-            setEditMode(false);
-            setNewProject({ name: '', description: '' });
-            setShowModal(true);
-          }}
+          onClick={() => navigate('/create-project')}
           className="bg-gradient-to-r from-primary to-indigo-600 hover:opacity-90 text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-[0.98] text-sm"
         >
           <Plus size={18} />
@@ -253,11 +225,10 @@ const Projects = () => {
         </div>
       )}
 
-      {/* Modal - Framer Motion */}
+      {/* Edit Modal (Keeping for Edit Project only) */}
       <AnimatePresence>
-        {showModal && (
+        {showModal && editMode && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -266,14 +237,12 @@ const Projects = () => {
               className="absolute inset-0 bg-black/70 backdrop-blur-md"
             />
             
-            {/* Modal Content */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-xl overflow-hidden"
             >
-              {/* Top-right close button */}
               <button 
                 onClick={() => setShowModal(false)}
                 className="absolute right-4 top-4 text-slate-500 hover:text-white transition-colors"
@@ -282,8 +251,8 @@ const Projects = () => {
               </button>
 
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-white tracking-tight">{editMode ? 'Edit Project' : 'Create Project'}</h2>
-                <p className="text-slate-400 text-sm mt-1">{editMode ? 'Update existing project details' : 'Start a new project'}</p>
+                <h2 className="text-xl font-bold text-white tracking-tight">Edit Project</h2>
+                <p className="text-slate-400 text-sm mt-1">Update existing project details</p>
               </div>
 
               <form onSubmit={handleSubmitProject} className="space-y-4">
@@ -323,7 +292,7 @@ const Projects = () => {
                     type="submit"
                     className="bg-gradient-to-r from-primary to-indigo-600 hover:opacity-90 text-white font-bold px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-primary/20 hover:scale-105 active:scale-[0.98] text-xs"
                   >
-                    {editMode ? 'Save Changes' : 'Create Project'}
+                    Save Changes
                   </button>
                 </div>
               </form>
