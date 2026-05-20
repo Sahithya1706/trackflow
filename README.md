@@ -1,170 +1,87 @@
 # 🐛 TrackFlow — Issue Tracking System
+Real-time MERN project management and issue tracking platform inspired by modern SaaS tools like Jira and Linear.
 
-> A production-ready, full-stack MERN application for managing projects, tracking issues, and collaborating in real-time — built like Jira and Linear.
+## 🌟 Overview:-
+TrackFlow is an enterprise-style full-stack project management platform built using the **MERN Stack** with powerful real-time collaboration features.
+It allows teams to create projects, manage tickets, track progress using Kanban workflows, collaborate through comments, and monitor activity logs in real time.
 
----
+The application focuses on:
+* Real-time team collaboration
+* Clean SaaS-inspired UI/UX
+* Scalable backend architecture
+* Secure authentication & authorization
+* Modern project workflow management
 
-## 🚀 Features
+## ✨ Features
 
-| Feature | Description |
-|---|---|
-| 🔐 **Auth & RBAC** | JWT-based authentication, role-based access (user / admin) |
-| 📋 **Kanban Board** | Drag-and-drop ticket management across status columns |
-| 🎫 **Ticket Management** | Create, edit, delete tickets with priority, status & assignee |
-| 💬 **Comments** | Per-ticket collaboration thread with real-time updates |
-| ⚡ **Real-Time (Socket.io)** | Live board updates, comment sync, notifications |
-| 📎 **File Uploads** | Attach screenshots to tickets via Multer |
-| 📊 **Activity Logs** | Full audit trail of project & ticket actions |
-| 🛡️ **Admin Dashboard** | Analytics, user management, system-wide charts (Recharts) |
-| 🔔 **Notifications** | Real-time bell with unread count badges & Accept/Decline invites |
-| 🔍 **Command Palette** | Global search via `Ctrl+K` / `Cmd+K` with keyboard navigation |
-| 📱 **Fully Responsive** | Mobile-first layout with slide-in sidebar drawer |
+### 🔐 Authentication & Security:-
+* JWT Authentication
+* Protected Routes
+* Role-Based Access Control (RBAC)
+* Admin-only routes & middleware
+* Secure API authorization
 
----
+### 📁 Project Management:-
+* Create / Edit / Delete Projects
+* Dedicated Project Pages
+* Team Member Management
+* Project Activity Tracking
+
+### 🎫 Ticket Management:-
+* Create / Update / Delete Tickets
+* Priority Levels (Low / Medium / High)
+* Status Tracking
+* Ticket Details Page
+* Attachments & Visual Evidence
+* Assignee System
+
+### 📌 Kanban Workflow:-
+* Drag & Drop Board
+* Real-time Status Updates
+* Optimistic UI Rendering
+* To Do / In Progress / Done Columns
+
+### 💬 Collaboration System:-
+* Real-time Comments
+* Socket.io Live Updates
+* Team Discussion Threads
+* Activity Timeline
+
+### 🔔 Notification System:-
+* Live Notification Updates
+* Ticket Assignment Alerts
+* Invite Notifications
+
+### 📊 Admin Dashboard:-
+* User Management
+* Platform Analytics
+* Ticket Statistics
+* Project Monitoring
+* Administrative Controls
+
+### 📱 Responsive Design:-
+* Fully Responsive Layout
+* Mobile Navigation
+* Tablet & Desktop Support
+* Optimized SaaS UI
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **React** (Vite)
-- **TailwindCSS** — utility-first styling with glassmorphism design
-- **React Router v6** — full-page navigation (no modals)
-- **Socket.io Client** — real-time events
-- **Recharts** — analytics charts
-- **Framer Motion** — page animations
-- **@hello-pangea/dnd** — drag-and-drop Kanban
-- **Lucide React** — icon library
-- **Axios** — HTTP client
+### Frontend:-
+* React.js
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Axios
+* Socket.io 
 
-### Backend
-- **Node.js + Express** — REST API
-- **MongoDB + Mongoose** — database & ODM
-- **Socket.io** — WebSocket server
-- **JWT** — authentication tokens
-- **Multer** — file upload middleware
-- **Bcrypt** — password hashing
-- **Helmet, CORS, Rate Limiting** — security hardening
+### Backend:-
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* Socket.io
+* JWT Authentication
+* Multer
 
----
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js ≥ 18
-- MongoDB (local or Atlas)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/your-username/trackflow.git
-cd trackflow
-```
-
-### 2. Backend Setup
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-### 3. Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
----
-
-## 🔐 Environment Variables
-
-Create a `.env` file inside `backend/`:
-
-```env
-PORT=5000
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/trackflow
-JWT_SECRET=your_jwt_secret_key
-NODE_ENV=development
-```
-
----
-
-## 🗄️ Database Collections
-
-| Collection | Purpose |
-|---|---|
-| `users` | Auth credentials + role |
-| `projects` | Workspace containers |
-| `tickets` | Issues / tasks per project |
-| `comments` | Per-ticket discussion threads |
-| `activities` | Audit log of all actions |
-| `notifications` | Real-time user alerts |
-
----
-
-## 🌐 API Reference
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/` | Server health root |
-| `GET` | `/api/health` | Uptime + memory metrics |
-| `POST` | `/api/auth/register` | User registration |
-| `POST` | `/api/auth/login` | User login |
-| `GET` | `/api/projects` | List user projects |
-| `POST` | `/api/projects` | Create project |
-| `GET` | `/api/projects/:id/tickets` | Get tickets for project |
-| `GET` | `/api/tickets/:id` | Get single ticket |
-| `DELETE` | `/api/tickets/:id` | Delete ticket |
-| `GET` | `/api/search?q=` | Global search |
-| `GET` | `/api/notifications` | User notifications |
-| `GET` | `/api/admin/analytics` | Admin-only analytics |
-
----
-
-## 👑 Admin Setup
-
-Admin users must be created **directly in MongoDB** (not via signup):
-
-```js
-db.users.updateOne(
-  { email: "admin@trackflow.com" },
-  { $set: { role: "admin" } }
-)
-```
-
----
-
-## 📁 Project Structure
-
-```
-trackflow/
-├── backend/
-│   ├── controllers/     # Route logic
-│   ├── middleware/      # Auth, admin, upload, error
-│   ├── models/         # Mongoose schemas
-│   ├── routes/         # Express routers
-│   ├── uploads/        # Multer file storage (gitignored)
-│   └── server.js       # Entry point
-│
-└── frontend/
-    ├── src/
-    │   ├── components/  # Sidebar, Kanban, NotificationBell…
-    │   ├── context/     # AuthContext
-    │   ├── pages/       # Dashboard, Projects, TicketDetails…
-    │   └── App.jsx      # Router setup
-    └── vite.config.js
-```
-
----
-
-## 🔮 Roadmap
-
-- [ ] Email notifications via SendGrid / Nodemailer
-- [ ] Password reset with expiring token
-- [ ] Role promotion UI (member → manager)
-- [ ] GitHub / Slack integration
-- [ ] Mobile native app (React Native)
-
----
-
-## 📄 License
-
-MIT © TrackFlow
+# 📸 Screenshots
