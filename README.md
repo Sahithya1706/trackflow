@@ -84,4 +84,8 @@ The application focuses on:
 * JWT Authentication
 * Multer
 
-# 📸 Screenshots
+### 📸 Screenshots
+<img width="1844" height="899" alt="image" src="https://github.com/user-attachments/assets/a8f4e1a9-2cf8-417b-87ca-de3805b44d3c" />
+
+## 🏁 Conclusion:-
+TrackFlow is a modern MERN-based project management and issue tracking platform that demonstrates real-time collaboration, Kanban workflows, secure authentication, and scalable full-stack architecture. The project reflects practical implementation of modern SaaS concepts and showcases strong frontend, backend, database, and deployment skills.
